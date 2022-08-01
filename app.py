@@ -39,6 +39,7 @@ def after_request(response):
     response.headers["Pragma"] = "no-cache"
     return response
 
+
 def map_stock(stock):
     """Reformat stocks data"""
     return {
@@ -47,6 +48,7 @@ def map_stock(stock):
         'quantity': stock["quantity"],
         'price': lookup(stock["symbol"])["price"]
     }
+
 
 @app.route("/")
 @login_required
@@ -85,7 +87,11 @@ def buy():
         # Check if shares entered
         if not shares:
             return apology("Missing shares", 400)
-        # Set shares at int and check if positive value entered
+        # Check if shares is non-integer
+        regex = re.compile("^\d+$")
+        if not re.fullmatch(regex, shares):
+            return apology("Shares must be an integer", 400)
+        # Set shares as int and check if positive value entered
         shares = int(shares)
         if shares <= 0:
             return apology("Value must be greater than or equal to 1.")
@@ -216,6 +222,7 @@ def quote():
     else:
         return render_template("quote.html")
 
+
 @app.route("/register", methods=["GET", "POST"])
 def register():
     """Register user"""
@@ -227,7 +234,7 @@ def register():
         password = request.form.get("password")
         confirmation = request.form.get("confirmation")
         # Check for password requirements
-        regex = re.compile("^(?=.*[\d])(?=.*[A-Z])(?=.*[a-z])(?=.*[@#$])[\w\d@#$]{6,12}$")
+        regex = re.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$")
 
         if not username:
             return apology("Provide a username", 400)
@@ -256,6 +263,7 @@ def register():
     # User reached route via GET
     else:
         return render_template("register.html")
+
 
 @app.route("/sell", methods=["GET", "POST"])
 @login_required
