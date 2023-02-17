@@ -70,7 +70,7 @@ python-versions = ">=3.7"
 click = ">=8.0"
 itsdangerous = ">=2.0"
 Jinja2 = ">=3.0"
-Werkzeug = ">=2.2.2"
+Werkzeug = ">=2.2.3"
 
 [package.extras]
 async = ["asgiref (>=3.2)"]
